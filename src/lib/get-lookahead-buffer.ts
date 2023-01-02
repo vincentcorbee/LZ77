@@ -7,15 +7,5 @@ export function getLookaheadBuffer({
   lookaheadBufferLength: number
   indexInput: number
 }) {
-  const firstChar = input[indexInput]
-
-  if (firstChar === ' ') return firstChar
-
-  const lookaheadBuffer = input.substring(indexInput, indexInput + lookaheadBufferLength)
-
-  const firstWhiteSpace = lookaheadBuffer.indexOf(' ')
-
-  if (firstWhiteSpace > -1) return lookaheadBuffer.substring(0, firstWhiteSpace)
-
-  return lookaheadBuffer
+  return input.substring(indexInput, indexInput + lookaheadBufferLength)
 }
