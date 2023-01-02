@@ -1,4 +1,6 @@
-export function decompress(input: [number, number, string][]) {
+import { EncodedArray } from "./types"
+
+export function decompress(input: EncodedArray) {
   const { length } = input
 
   let output = ''

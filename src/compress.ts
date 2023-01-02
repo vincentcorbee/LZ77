@@ -1,13 +1,14 @@
 import { getDefaultOptions, getEntry, getLookaheadBuffer } from "./lib";
+import { LZ77Options, EncodedArray } from './types'
 
 export function compress(
   input: string,
-  options?: { searchBufferLength?: number; lookaheadBufferLength?: number }
+  options?: LZ77Options
 ) {
   const { searchBufferLength = 256, lookaheadBufferLength = 16 } =
     options ?? getDefaultOptions()
 
-  const output: [number, number, string][] = []
+  const output: EncodedArray = []
   const end = input.length - 1
 
   let searchBuffer = ''

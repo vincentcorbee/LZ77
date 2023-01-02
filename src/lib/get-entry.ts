@@ -1,8 +1,10 @@
+import { Entry } from "../types"
+
 export function getEntry(searchBuffer: string, lookaheadBuffer: string) {
   const char = lookaheadBuffer[0]
 
   if (searchBuffer.indexOf(char) === -1)
-    return [0, 0, '', char] as [number, number, string, string]
+    return [0, 0, '', char] as Entry
 
   const searchBufferEnd = searchBuffer.length
 
@@ -46,5 +48,5 @@ export function getEntry(searchBuffer: string, lookaheadBuffer: string) {
     indexLookaheadBuffer--
   }
 
-  return [offset, lengthMatch, matchedChars, ''] as [number, number, string, string]
+  return [offset, lengthMatch, matchedChars, ''] as Entry
 }
