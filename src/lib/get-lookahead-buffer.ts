@@ -1,11 +1,11 @@
-export function getLookaheadBuffer({
-  input,
-  lookaheadBufferLength,
-  indexInput,
-}: {
-  input: string
-  lookaheadBufferLength: number
-  indexInput: number
-}) {
-  return input.substring(indexInput, indexInput + lookaheadBufferLength)
+export function getLookaheadBuffer(
+  input: string,
+  codingPosition: number,
+  lookaheadBufferLength: number,
+) {
+  /*
+    Return the lookahead buffer plus the current character
+  */
+
+  return input.substring(codingPosition, codingPosition + lookaheadBufferLength)
 }

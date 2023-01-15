@@ -1,20 +1,19 @@
-import { Entry } from "../types"
+import { Match } from "../types"
 
-export function getEntry(searchBuffer: string, lookaheadBuffer: string) {
-  const char = lookaheadBuffer[0]
+export function getMatch(searchBuffer: string, lookaheadBuffer: string) {
+  const [char] = lookaheadBuffer
 
-  if (searchBuffer.indexOf(char) === -1)
-    return [0, 0, '', char] as Entry
+  let offset = 0
+  let lengthMatch = 0
+  let matchedChars = searchBuffer.lastIndexOf(char) === -1 ? '' : char
+
+  if (!matchedChars) return [offset, lengthMatch, matchedChars] as Match
 
   const searchBufferEnd = searchBuffer.length
 
   let indexLookaheadBuffer = lookaheadBuffer.length
 
-  let offset = 0
-  let lengthMatch = 0
-  let matchedChars = ''
-
-  while (indexLookaheadBuffer > -1) {
+  while (indexLookaheadBuffer > 0) {
     const chars = lookaheadBuffer.substring(0, indexLookaheadBuffer)
 
     const indexInSearchBuffer = searchBuffer.lastIndexOf(chars)
@@ -26,11 +25,11 @@ export function getEntry(searchBuffer: string, lookaheadBuffer: string) {
 
       offset = searchBufferEnd - indexInSearchBuffer
 
-      /* Get the run time length of the matched chars in the lookahead buffer */
+      /* Get the run length of the matched chars in the lookahead buffer */
       if (indexInSearchBuffer + chars.length === searchBufferEnd) {
         while (indexLookaheadBuffer <= lookaheadBuffer.length) {
           const remainingChars = lookaheadBuffer.substring(indexLookaheadBuffer)
-          const match = remainingChars.match(new RegExp(`^(?:${chars})`))
+          const match = remainingChars.indexOf(chars) === 0
 
           if (!match) break
 
@@ -48,5 +47,5 @@ export function getEntry(searchBuffer: string, lookaheadBuffer: string) {
     indexLookaheadBuffer--
   }
 
-  return [offset, lengthMatch, matchedChars, ''] as Entry
+  return [offset, lengthMatch, matchedChars] as Match
 }

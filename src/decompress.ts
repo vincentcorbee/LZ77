@@ -1,14 +1,15 @@
-import { EncodedArray } from "./types"
+import { BinaryReader } from "./modules"
 
-export function decompress(input: EncodedArray) {
-  const { length } = input
+export function decompress(buffer: ArrayBuffer) {
+  const binaryReader = new BinaryReader(buffer)
 
   let output = ''
 
   let index = 0
 
-  while (index < length) {
-    const [offset, length, char] = input[index]
+  while (binaryReader.peak() !== null) {
+    const [offset, length] = binaryReader.getOffsetLength()
+    const char = binaryReader.getCharacter()
 
     if (offset === 0 && length === 0) output += char
     else {
@@ -19,12 +20,12 @@ export function decompress(input: EncodedArray) {
       const chars = output.substring(startIndex, startIndex + length)
 
       if (overflow) {
-        let runtimeLength = length / (length - overflow)
+        let runLength = length / (length - overflow)
 
-        while (runtimeLength > 0) {
+        while (runLength > 0) {
           output += chars
 
-          runtimeLength--
+          runLength--
         }
       } else {
         output += chars

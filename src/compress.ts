@@ -1,43 +1,38 @@
-import { getDefaultOptions, getEntry, getLookaheadBuffer } from "./lib";
+import { getOptions, getMatch, getLookaheadBuffer, getSearchBuffer, createArrayBuffer } from "./lib";
 import { LZ77Options, EncodedArray } from './types'
 
 export function compress(
   input: string,
-  options?: LZ77Options
+  options?: Partial<LZ77Options>
 ) {
-  const { searchBufferLength = 256, lookaheadBufferLength = 16 } =
-    options ?? getDefaultOptions()
+  const { searchBufferLength, lookaheadBufferLength } = getOptions(options)
 
-  const output: EncodedArray = []
+  const encodedArray: EncodedArray = []
   const end = input.length - 1
 
   let searchBuffer = ''
 
-  let indexInput = 0
+  let codingPosition = 0
 
-  while (indexInput <= end) {
-    const lookaheadBuffer = getLookaheadBuffer({
-      input,
-      indexInput,
-      lookaheadBufferLength,
-    })
-    const [offset, length, matchedChars, deviation] = getEntry(
+  while (codingPosition <= end) {
+    const lookaheadBuffer = getLookaheadBuffer(input, codingPosition, lookaheadBufferLength)
+    const [offset, length, matchedChars] = getMatch(
       searchBuffer,
       lookaheadBuffer
     )
 
-    indexInput += length
+    codingPosition += length
 
-    const char = deviation || (input[indexInput] ?? '')
+    const nonMatchingChar = input[codingPosition] ?? ''
 
-    searchBuffer += matchedChars + char
+    searchBuffer += matchedChars + nonMatchingChar
 
-    indexInput++
+    codingPosition++
 
-    output.push([offset, length, char])
+    searchBuffer = getSearchBuffer(searchBuffer, searchBufferLength)
 
-    if (searchBuffer.length >= searchBufferLength) searchBuffer = ''
+    encodedArray.push([offset, length, nonMatchingChar])
   }
 
-  return output
+  return createArrayBuffer(encodedArray)
 }

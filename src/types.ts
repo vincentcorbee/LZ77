@@ -3,8 +3,8 @@ export type LZ77Options = {
   lookaheadBufferLength: number
 }
 
-export type OutputEntry = [number, number, string]
+export type Encoding = [number, number, string]
 
-export type Entry = [number, number, string, string]
+export type Match = Encoding
 
-export type EncodedArray = OutputEntry[]
+export type EncodedArray = Encoding[]
