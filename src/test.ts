@@ -1,7 +1,7 @@
 import assert from "assert"
 
 import { compress, decompress } from "."
-import { sampleFour as input } from "./samples"
+import { sampleOne as input } from "./samples"
 
 const compressed = compress(input)
 
